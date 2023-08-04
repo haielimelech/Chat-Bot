@@ -18,10 +18,7 @@ export default function Home() {
     const messageId = uuidv4();
 
     // Add user's input to messages object
-    setStreamedData((prevMessages) => ({
-      ...prevMessages,
-      [messageId]: { type: 'user', text: userMessage },
-    }));
+    setStreamedData((prevMessages) => ({...prevMessages,[messageId]: { type: 'user', text: userMessage }}));
 
     const response = await fetch('api/chat', {
       method: 'POST',
@@ -31,17 +28,16 @@ export default function Home() {
 
     const reader = response.body.getReader();
     let receivedMessage = '';
-
-    while (true) {
+      
       const { done, value } = await reader.read();
 
       if (done) {
-        break;
+        throw new Error('Received an empty response from the server.');
       }
 
       const text = new TextDecoder().decode(value);
       receivedMessage += text;
-    }
+    
 
     // Add AI's response to messages object
     setStreamedData((prevMessages) => ({
@@ -61,12 +57,28 @@ export default function Home() {
     <main className="flex max-w-6xl mx-auto item-center justify-center p-24">
       <div className='flex flex-col gap-12'>
       <h1 className="text-gray-200 font-extrabold text-5xl text-center">
-        Chat Demo 🦜🔗
-      </h1>
-
+        AI Chat Assistant       
+      </h1> 
+      {Object.keys(streamedData).map((messageId) => {
+          const message = streamedData[messageId];
+          return (
+            <div key={messageId}>
+              <h3 className={`text-2xl ${message.type === 'user' ? 'text-blue-500' : 'text-gray-400'}`}>
+                {message.type === 'user' ? 'You' : 'AI Assistant'}
+              </h3>
+              <p
+                className={`text-gray-200 rounded-md bg-gray-700 p-4 ${
+                  message.type === 'user' ? 'bg-blue-500' : ''
+                }`}
+              >
+                {message.text}
+              </p>
+            </div>
+          );
+        })}
       <form onSubmit={handleChatSubmit}>
         <input className='py-2 px-4 rounded-md bg-gray-600 text-white w-full'
-        placeholder='Enter Prompt'
+        placeholder='Send a message'
         name='prompt'
         value={promptValue}
         onChange={(e)=>setPromptValue(e.target.value)}
@@ -90,26 +102,7 @@ export default function Home() {
       </button>
 
       </div>
-      </form>
-    
-      {Object.keys(streamedData).map((messageId) => {
-          const message = streamedData[messageId];
-          return (
-            <div key={messageId}>
-              <h3 className={`text-2xl ${message.type === 'user' ? 'text-blue-500' : 'text-gray-400'}`}>
-                {message.type === 'user' ? 'You' : 'AI Assistant'}
-              </h3>
-              <p
-                className={`text-gray-200 rounded-md bg-gray-700 p-4 ${
-                  message.type === 'user' ? 'bg-blue-500' : ''
-                }`}
-              >
-                {message.text}
-              </p>
-            </div>
-          );
-        })}
-       
+      </form>   
       </div>
       
     </main>
