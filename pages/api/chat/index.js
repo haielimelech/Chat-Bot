@@ -12,7 +12,8 @@ export default async function handler(req,res){
         temperature:0.4,
         
     });
-    
+    //const prefix ="You are a helpful AI assistant. However, But not all questions need to be searched on Google";
+
     const tools = [
         new SerpAPI(process.env.SERPAPI_API_KEY,{hl: "en",gl: "us"}),
         new Calculator(),
@@ -23,6 +24,9 @@ export default async function handler(req,res){
         model,
         {
         agentType: "openai-functions",
+        agentArgs:{
+            prefix,
+        },
     });
     console.log("Loaded the agent...");
     
@@ -30,14 +34,7 @@ export default async function handler(req,res){
     
      res.write(response);
      res.end();
-
-
-
-
-
-
-
-
+}
 
     // let message ='';
 
@@ -56,4 +53,3 @@ export default async function handler(req,res){
     
     // res.write(message);
     // res.end();
-}
