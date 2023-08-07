@@ -9,42 +9,37 @@ export default function Home() {
 
   const handleChatSubmit = async (e) => {
     e.preventDefault();
-
+    //Taking Form updated data
     const formData = new FormData(e.currentTarget);
     const userMessage = formData.get('prompt');
     setPromptValue('');
 
     // Generate a unique identifier for the new message
-    const messageId = uuidv4();
-
+    const userMessageID = uuidv4();
+    const aiMessageID = uuidv4();
     // Add user's input to messages object
-    setStreamedData((prevMessages) => ({...prevMessages,[messageId]: { type: 'user', text: userMessage }}));
+    setStreamedData((prevMessages) => ({...prevMessages,[userMessageID]: { type: 'user', text: userMessage }}));
 
     const response = await fetch('api/chat', {
       method: 'POST',
       body: JSON.stringify({ prompt: userMessage }),
       headers: { 'Content-Type': 'application/json' },
     });
-
+    //get response from AI
     const reader = response.body.getReader();
     let receivedMessage = '';
-      
-      const { done, value } = await reader.read();
+    while(true){
+      const {done,value} = await reader.read();
 
-      if (done) {
-        throw new Error('Received an empty response from the server.');
+      if(done){
+        break;
       }
-
+      
       const text = new TextDecoder().decode(value);
-      receivedMessage += text;
-    
-
-    // Add AI's response to messages object
-    setStreamedData((prevMessages) => ({
-      ...prevMessages,
-      [uuidv4()]: { type: 'ai', text: receivedMessage },
-    }));
-    console.log(setStreamedData);
+      receivedMessage+=text;
+      // Add AI's response to messages object
+      setStreamedData((prevMessages) => ({...prevMessages,[aiMessageID]: { type: 'ai', text: receivedMessage}}));
+    }
   };
 
 
