@@ -1,22 +1,55 @@
 "use client";
 import { v4 as uuidv4 } from 'uuid';
-import {useState} from 'react';
+import {useState,useEffect} from 'react';
 
 export default function Home() {
 
   const [streamedData,setStreamedData] = useState({});
   const [promptValue, setPromptValue] = useState("");
-
+  const [isInputDisabled, setInputDisabled] = useState(false);
+  const [placeholderValue,setPlaceholderValue] = useState('Send a Message');
+  
   const handleChatSubmit = async (e) => {
     e.preventDefault();
     //Taking Form updated data
     const formData = new FormData(e.currentTarget);
     const userMessage = formData.get('prompt');
+    let animationFlag = true;
+    setInputDisabled(true);
     setPromptValue('');
+
+    const startTypingAnimation = async () => {
+      while (animationFlag) {
+        setPlaceholderValue('.');
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        if (!animationFlag){
+          setPlaceholderValue('Send a Message');
+          break;
+        } 
+        
+        setPlaceholderValue('. .');
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        if (!animationFlag){
+          setPlaceholderValue('Send a Message');
+          break;
+        } 
+        
+        setPlaceholderValue('. . .');
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        if (!animationFlag){
+          setPlaceholderValue('Send a Message');
+          break;
+        } 
+      }
+    };
+
+    //Thinking animation is Activate
+    startTypingAnimation();
 
     // Generate a unique identifier for the new message
     const userMessageID = uuidv4();
     const aiMessageID = uuidv4();
+
     // Add user's input to messages object
     setStreamedData((prevMessages) => ({...prevMessages,[userMessageID]: { type: 'user', text: userMessage }}));
 
@@ -25,9 +58,11 @@ export default function Home() {
       body: JSON.stringify({ prompt: userMessage }),
       headers: { 'Content-Type': 'application/json' },
     });
+    
     //get response from AI
     const reader = response.body.getReader();
     let receivedMessage = '';
+
     while(true){
       const {done,value} = await reader.read();
 
@@ -37,15 +72,20 @@ export default function Home() {
       
       const text = new TextDecoder().decode(value);
       receivedMessage+=text;
+      
       // Add AI's response to messages object
       setStreamedData((prevMessages) => ({...prevMessages,[aiMessageID]: { type: 'ai', text: receivedMessage}}));
     }
+    
+    setInputDisabled(false);
+    animationFlag = false;
+    setPlaceholderValue('Send a Message');
   };
 
-
-  
   const handleClearChat = () => {
     setStreamedData({});
+    setInputDisabled(false);
+    setPlaceholderValue('Send a Message');
   }
  
   return (
@@ -73,24 +113,27 @@ export default function Home() {
         })}
       <form onSubmit={handleChatSubmit}>
         <input className='py-2 px-4 rounded-md bg-gray-600 text-white w-full'
-        placeholder='Send a message'
+        placeholder={placeholderValue}
         name='prompt'
         value={promptValue}
         onChange={(e)=>setPromptValue(e.target.value)}
         required
+        disabled={isInputDisabled}
         ></input>
 
       <div className='flex justify-center gap-4 py-4'>
+      {!isInputDisabled && (
       <button 
       type="submit"
       className="py-2 px-4 rounded-md text-sm bg-lime-700 text-white hover:opacity-80 transition-opacity"
       >
         Send Chat
       </button>
-
-      <button 
+      )}
+      <button
       type="button"
       onClick={handleClearChat}
+      disabled={isInputDisabled}
       className="py-2 px-4 rounded-md text-sm bg-red-700 text-white hover:opacity-80 transition-opacity"
       >
         Clear Chat
