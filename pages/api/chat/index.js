@@ -18,7 +18,7 @@ export default async function handler(req,res){
     const filePathDesktop = path.join('C:', 'Users', 'hai84', 'Desktop', "Projects", 'tevel-campers.txt');
     const model = new ChatOpenAI({
         modelName:"gpt-3.5-turbo",
-        temperature:0.4,
+        temperature:0.2,
         streaming:true,
         callbacks:
         [
@@ -36,15 +36,15 @@ export default async function handler(req,res){
     const vectorStore = await HNSWLib.fromDocuments(docs, new OpenAIEmbeddings());
     const dataChain = VectorDBQAChain.fromLLM(new OpenAI(),vectorStore);
     
-    const prefix ="You are a helpful AI assistant. However,Don't repeat yourself and every response suffix ask the user if he have any questions...";
+    const prefix ="You are a helpful AI Caravan company called Tevel Campers assistant. However, every response suffix ask the user if he have any questions...";
     const qaTool = new ChainTool({
         name: "tevel-campers-qa",
         description:
-          "שאלות ותשובות עבור חברת השכרות קרוואנים: אתה שימושי כאשר שואלים אותך על השכרת קרוואנים,מחירים,יעדים ,וכו.",
+          "שאלות ותשובות עבור חברת השכרות קרוואנים: אתה שימושי כאשר שואלים אותך על השכרת קרוואנים,מחירים,יעדים ,הצעות מחיר,תמיכה בעת תקלות ,כל השאלות שתישאל לגבי טיולי קרוואנים תענה על בסיס המידע הזה,וכו.",
         chain: dataChain,
       });
     const tools = [
-        new SerpAPI(process.env.SERPAPI_API_KEY,{hl: "en",gl: "us"}),
+        //new SerpAPI(process.env.SERPAPI_API_KEY,{hl: "en",gl: "us"}),
         new Calculator(),
         qaTool,
     ];
