@@ -1,6 +1,7 @@
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { OpenAI } from "langchain/llms/openai";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
+import {createVectorStoreAgent} from "langchain/agents";
 import { SerpAPI, ChainTool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
 import { VectorDBQAChain } from "langchain/chains";
@@ -23,22 +24,21 @@ export default async function handler(req,res){
         modelName:"gpt-3.5-turbo",
         temperature:0,
         streaming:true,
-        topK11111:1,
         callbacks:
         [
             {
                 handleLLMNewToken(token){
-                   res.write(token);
+                    res.write(token); 
                 }
             },
         ],
     });
     
-    const text = fs.readFileSync(generalInfo_FilePathDesktop, 'utf8');
-    const text1 = fs.readFileSync(pricesInfo_FilePathDesktop, 'utf8');
-    const text2 = fs.readFileSync(aboutInfo_FilePathDesktop, 'utf8');
-    const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1500 });
-    const docs = await textSplitter.createDocuments([text,text1,text2]);
+    const text = fs.readFileSync(filePathLaptop, 'utf8');
+    //const text1 = fs.readFileSync(pricesInfo_FilePathDesktop, 'utf8');
+    //const text2 = fs.readFileSync(aboutInfo_FilePathDesktop, 'utf8');
+    const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 });
+    const docs = await textSplitter.createDocuments([text]);
     const vectorStore = await HNSWLib.fromDocuments(docs, new OpenAIEmbeddings());
     const dataChain = VectorDBQAChain.fromLLM(model,vectorStore);
     
@@ -68,15 +68,17 @@ export default async function handler(req,res){
         tools,
         model,
         {
-        agentType: "openai-functions",
+        agentType: "chat-zero-shot-react-description",
         agentArgs:{
             prefix,
         },
-        
-    });
+    }
+    );
+   
+
     console.log("Loaded the agent...");
     
     await executer.run(prompt);
-   
+    
     res.end();
 }
