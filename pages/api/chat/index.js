@@ -21,8 +21,9 @@ export default async function handler(req,res){
 
     const model = new ChatOpenAI({
         modelName:"gpt-3.5-turbo",
-        temperature:0.1,
+        temperature:0,
         streaming:true,
+        topK11111:1,
         callbacks:
         [
             {
@@ -44,14 +45,14 @@ export default async function handler(req,res){
     const prefix =`You are a helpful AI trip Caravan company called Tevel Campers assistant. However
     ,Answer just in hebrew,
     ,every question asked you answer base on the tevel-campers-qa tool,
-    ,Any question asked other than questions about a caravan trip(tevel-campers-qa) will let you know that you don't know the answer and whether it can be refined
+    ,Any question you get asked exept that questions about a caravan trip(tevel-campers-qa) ask the user if he could be more specific next time...
     ,Every question you have been asked exept andevery response suffix ask the user if he have any questions...`;
 
     const qaTool = new ChainTool({
         name: "tevel-campers-qa",
         description:
           `שאלות ותשובות עבור חברת השכרות קרוואנים תבל קמפרס:
-           אתה שימושי כאשר שואלים אותך על השכרת קרוואנים,מחירים,יעדים,תפעול הקרוואן ,גיר,הצעות מחיר,תמיכה בעת תקלות ,תאונות,
+           אתה שימושי כאשר שואלים אותך על השכרת קרוואנים,מחירים,יעדים,תפעול הקרוואן ,גיר,הצעות מחיר,תמיכה בעת תקלות,יצירת קשר,פניות ,תאונות,
            כל השאלות שתישאל לגבי טיולי קרוואנים תענה על בסיס המידע הזה,וכו.
            אם אתה לא יודע את התשובה תענה אם אפשר להיות יותר ספציפיים בשאלות הבאות.`,
         chain: dataChain,
