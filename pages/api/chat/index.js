@@ -26,7 +26,7 @@ export default async function handler(req,res){
                 handleLLMNewToken(token){
                     if (token === ' Input') {
                         shouldStartWriting = true;
-                        token = 'Output';
+                        token = 'תשובה עבור';               
                     }
                     if (shouldStartWriting) {
                         res.write(token);
@@ -42,22 +42,20 @@ export default async function handler(req,res){
     const vectorStore = await HNSWLib.fromDocuments(docs, new OpenAIEmbeddings());
     const dataChain = VectorDBQAChain.fromLLM(model,vectorStore);
       
-    const prefix =`You are a helpful AI trip Caravan company called Tevel Campers assistant. However
-    ,Answer just in hebrew,every question asked you answer base on the (tevel-campers-qa),
-    and you must every response suffix ask the user if he have any questions...`;
-
+    const prefix =`You are a helpful AI assistant for trip Caravan company called Tevel Campers. However
+     Answer just in hebrew,every question asked you answer base on the tevel-campers-qa qaTool and allways be kind and ask if there any more questions.`;
+        
     const qaTool = new ChainTool({
         name: "tevel-campers-qa",
         description:
-          `,אתה שימושי כאשר שואלים אותך על השכרת קרוואנים,מחירים,יעדים ,הצעות מחיר,מידע כללי על הקרוואן,תכנון מסלולים,פרטים ודרכי התקשרות,תשאל תמיד אם יש עוד שאלות...,
-            כל השאלות שתישאל לגבי טיולי קרוואנים תענה על בסיס המידע הזה בלבד,תענה תמיד בעברית.`,
+          `אתה שימושי כאשר שואלים אותך על השכרת קרוואנים,מחירים,יעדים ,הצעות מחיר,מידע כללי על הקרוואן,תכנון מסלולים,פרטים ודרכי התקשרות,
+        ..תמיד תשאל אם יש עוד שאלות ותהיה נחמד ואדיב ותענה רק בעברית`,
         chain: dataChain,
         returnDirect: true,
       });
     const tools = [
         // new SerpAPI(process.env.SERPAPI_API_KEY,{hl: "en",gl: "us"}),
         qaTool,
-       
     ];
 
     const executer = await initializeAgentExecutorWithOptions(
@@ -74,7 +72,6 @@ export default async function handler(req,res){
     console.log("Loaded the agent...");
 
     await executer.run(prompt);
-  
 
     res.end();
 }
