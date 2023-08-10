@@ -18,8 +18,6 @@ export default async function handler(req,res){
     const filePathLaptop = path.join('C:', 'Users','Public', 'tevel-campers.txt');
     const generalInfo_FilePathDesktop = path.join('C:', 'Users', 'hai84', 'Desktop', "Projects", 'tevel-campers.txt');
 
-  
-    
     const model = new ChatOpenAI({
         modelName:"gpt-3.5-turbo",
         temperature:0.5,
@@ -31,10 +29,7 @@ export default async function handler(req,res){
                     res.write(token);
                 }
             },
-         
-
         ],
-        
     });
     
     const text = fs.readFileSync(generalInfo_FilePathDesktop, 'utf8');
