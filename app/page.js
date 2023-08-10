@@ -7,7 +7,8 @@ export default function Home() {
   const [streamedData,setStreamedData] = useState({});
   const [promptValue, setPromptValue] = useState("");
   const [isInputDisabled, setInputDisabled] = useState(false);
-  const [placeholderValue,setPlaceholderValue] = useState('Send a Message');
+  const [placeholderValue,setPlaceholderValue] = useState('מה תרצה לשאול?');
+  const [showTooltip, setShowTooltip] = useState(false);
   
   const handleChatSubmit = async (e) => {
     e.preventDefault();
@@ -23,21 +24,21 @@ export default function Home() {
         setPlaceholderValue('.');
         await new Promise((resolve) => setTimeout(resolve, 500));
         if (!animationFlag){
-          setPlaceholderValue('Send a Message');
+          setPlaceholderValue('מה תרצה לשאול?');
           break;
         } 
         
         setPlaceholderValue('. .');
         await new Promise((resolve) => setTimeout(resolve, 500));
         if (!animationFlag){
-          setPlaceholderValue('Send a Message');
+          setPlaceholderValue('מה תרצה לשאול?');
           break;
         } 
         
         setPlaceholderValue('. . .');
         await new Promise((resolve) => setTimeout(resolve, 500));
         if (!animationFlag){
-          setPlaceholderValue('Send a Message');
+          setPlaceholderValue('מה תרצה לשאול?');
           break;
         } 
       }
@@ -80,70 +81,90 @@ export default function Home() {
     
     setInputDisabled(false);
     animationFlag = false;
-    setPlaceholderValue('Send a Message');
+    setPlaceholderValue('מה תרצה לשאול?');
   };
 
   const handleClearChat = () => {
     setStreamedData({});
     setInputDisabled(false);
-    setPlaceholderValue('Send a Message');
+    setPlaceholderValue('מה תרצה לשאול?');
   }
  
   return (
     <main className="flex max-w-6xl mx-auto item-center justify-center p-24">
       <div className='flex flex-col gap-12'>
-      <h1 className="text-gray-200 font-extrabold text-5xl text-center">
-        AI Chat Assistant       
-      </h1> 
-      {Object.keys(streamedData).map((messageId) => {
+        <h1 className="text-gray-200 font-extrabold text-5xl text-center">
+          AI Chat Assistant 🚍🌍 
+        </h1>
+        {Object.keys(streamedData).map((messageId) => {
           const message = streamedData[messageId];
           return (
             <div key={messageId}>
-              <h3 className={`text-2xl ${message.type === 'user' ? 'text-blue-500' : 'text-gray-400'}`}>
+              <h3 dir="rtl"
+                className={`text-2xl ${message.type === 'user' ? 'text-blue-500' : 'text-gray-400'}`}>
                 {message.type === 'user' ? 'You' : 'AI Assistant'}
               </h3>
               <p
                 className={`text-gray-200 rounded-md bg-gray-700 p-4 ${
                   message.type === 'user' ? 'bg-blue-500' : ''
                 }`}
+                dir="rtl"
               >
                 {message.text}
               </p>
             </div>
           );
         })}
-      <form onSubmit={handleChatSubmit}>
-        <input className='py-2 px-4 rounded-md bg-gray-600 text-white w-full'
-        placeholder={placeholderValue}
-        name='prompt'
-        value={promptValue}
-        onChange={(e)=>setPromptValue(e.target.value)}
-        required
-        disabled={isInputDisabled}
-        ></input>
-
-      <div className='flex justify-center gap-4 py-4'>
-      {!isInputDisabled && (
-      <button 
-      type="submit"
-      className="py-2 px-4 rounded-md text-sm bg-lime-700 text-white hover:opacity-80 transition-opacity"
-      >
-        Send Chat
-      </button>
-      )}
-      <button
-      type="button"
-      onClick={handleClearChat}
-      disabled={isInputDisabled}
-      className="py-2 px-4 rounded-md text-sm bg-red-700 text-white hover:opacity-80 transition-opacity"
-      >
-        Clear Chat
-      </button>
-
+        <form onSubmit={handleChatSubmit}>
+          <div style={{ position: 'relative' }}>
+            <input
+              className='py-2 px-4 rounded-md bg-gray-600 text-white w-full'
+              placeholder={placeholderValue}
+              name='prompt'
+              dir="rtl"
+              value={promptValue}
+              onChange={(e) => setPromptValue(e.target.value)}
+              required
+              disabled={isInputDisabled}
+            />
+          <div className='flex justify-center gap-3 py-5'>
+          <div
+              className="tooltip-icon"
+              title="Tip"
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+            >
+              <span 
+              className="text-white flex justify-center text-2xl">
+              &#x1F4A1;
+              </span>
+          </div>
+            {!isInputDisabled && (
+              <button
+                type="submit"
+                className="py-2 px-4 rounded-md text-sm bg-lime-700 text-white hover:opacity-80 transition-opacity"
+              >
+                Send Chat
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={handleClearChat}
+              disabled={isInputDisabled}
+              className="py-2 px-4 rounded-md text-sm bg-red-700 text-white hover:opacity-80 transition-opacity"
+            >
+              Clear Chat
+            </button>
+            
+            </div>
+            {showTooltip && (
+                <div className="text-white flex justify-center gap-2 py-2 ">
+                  נסה/י להיות יותר ספציפי בשאלה שלך כדי לקבל תשובה טובה יותר
+                </div>
+              )}
+            </div>
+        </form>
       </div>
-      </form>   
-      </div>
-      
     </main>
-  )
+  );
 }
