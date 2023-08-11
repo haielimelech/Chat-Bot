@@ -10,7 +10,6 @@ import * as fs from "fs";
 import { Input } from "postcss";
 const path = require('path');
 
-
 export default async function handler(req,res){
     const {prompt} = req.body;
     const filePathLaptop = path.join('C:', 'Users','Public', 'tevel-campers.txt');
@@ -53,6 +52,7 @@ export default async function handler(req,res){
         chain: dataChain,
         returnDirect: true,
       });
+      
     const tools = [
         // new SerpAPI(process.env.SERPAPI_API_KEY,{hl: "en",gl: "us"}),
         qaTool,
