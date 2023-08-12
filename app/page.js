@@ -92,21 +92,26 @@ export default function Home() {
  
   return (
     <main className="flex max-w-6xl mx-auto item-center justify-center p-24">
+    <div className='logo'>
+          <img src="https://i.ibb.co/ZSS6ft3/tevel-campers-logo-4.jpg" alt="Logo" className="max-h-12" />
+        </div>
       <div className='flex flex-col gap-12'>
-        <h1 className="text-gray-200 font-extrabold text-5xl text-center">
+      
+        <h1 className="text-[#963B45] font-extrabold text-5xl text-center">
           AI Chat Assistant 🚍🌍 
         </h1>
+    
         {Object.keys(streamedData).map((messageId) => {
           const message = streamedData[messageId];
           return (
             <div key={messageId}>
               <h3 dir="rtl"
-                className={`text-2xl ${message.type === 'user' ? 'text-blue-500' : 'text-gray-400'}`}>
+                className={`text-2xl ${message.type === 'user' ? 'text-[#FFAC00]' : 'text-[#FFAC00]'}`}>
                 {message.type === 'user' ? 'You' : 'AI Assistant'}
               </h3>
               <p
-                className={`text-gray-200 rounded-md bg-gray-700 p-4 ${
-                  message.type === 'user' ? 'bg-blue-500' : ''
+                className={`text-gray-200 rounded-md bg-[#563532] p-4 ${
+                  message.type === 'user' ? 'bg-[#563532]' : ''
                 }`}
                 dir="rtl"
               >
@@ -118,7 +123,7 @@ export default function Home() {
         <form onSubmit={handleChatSubmit}>
           <div style={{ position: 'relative' }}>
             <input
-              className='py-2 px-4 rounded-md bg-gray-600 text-white w-full'
+              className='py-2 px-4 rounded-md bg-[#854E49] text-white w-full'
               placeholder={placeholderValue}
               name='prompt'
               dir="rtl"

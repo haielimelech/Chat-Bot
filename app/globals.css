@@ -2,8 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-
-body{
-  @apply bg-gray-950;
+logo {
+  position: absolute; /* Position the logo absolutely within the header */
+  top: 0; /* Position at the top of the header */
+  left: 0; /* Position at the left of the header */
+  padding: 16px; /* Optional padding around the logo */
 }
 
+/* Optional styling for the logo image */
+.logo img {
+  max-height: 48px; /* Set a maximum height for the logo */
+   
+}
+
+/* Define a custom color class */
+.bg-custom-orange {
+  background-color: #FAF1E3;
+}
+
+/* Apply the custom color class to the body element */
+body {
+  @apply bg-custom-orange;
+}
