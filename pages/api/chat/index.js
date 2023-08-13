@@ -66,7 +66,6 @@ export default async function handler(req,res){
         {
         agentType: "zero-shot-react-description",
         agentArgs:{
-            prefix,
         },
     }
     );
