@@ -92,9 +92,12 @@ export default function Home() {
  
   return (
     <main className="flex max-w-6xl mx-auto item-center justify-center p-24">
-    <div className='logo'>
-          <img src="https://i.ibb.co/ZSS6ft3/tevel-campers-logo-4.jpg" alt="Logo" className="max-h-12" />
+      <div className='logo'>
+      <a href="https://tevel-campers.co.il/">
+          <img src="https://i.ibb.co/whkBFkN/logo.jpg" alt="Logo"/>
+          </a>
         </div>
+      
       <div className='flex flex-col gap-12'>
       
         <h1 className="text-[#963B45] font-extrabold text-5xl text-center">
@@ -163,13 +166,19 @@ export default function Home() {
             
             </div>
             {showTooltip && (
-                <div className="text-white flex justify-center gap-2 py-2 ">
+                <div className="text-[854E49] flex justify-center gap-4 py-4 ">
                   נסה/י להיות יותר ספציפי בשאלה שלך כדי לקבל תשובה טובה יותר
                 </div>
               )}
             </div>
         </form>
+        <a href='https://www.linkedin.com/in/hai-elimelech-b18326213/'>
+        <p className='copyright'>© Hai Elimelech</p>
+        </a>
+        
       </div>
+      
     </main>
+    
   );
 }

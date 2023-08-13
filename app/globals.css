@@ -2,16 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-logo {
+.logo {
   position: absolute; /* Position the logo absolutely within the header */
   top: 0; /* Position at the top of the header */
   left: 0; /* Position at the left of the header */
   padding: 16px; /* Optional padding around the logo */
 }
+.copyright {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 8px;
+  color: rgb(114, 114, 114);
+  font-size: 13px;
+}
 
 /* Optional styling for the logo image */
 .logo img {
-  max-height: 48px; /* Set a maximum height for the logo */
+  max-height: 70px; /* Set a maximum height for the logo */
    
 }
 

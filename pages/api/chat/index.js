@@ -35,7 +35,7 @@ export default async function handler(req,res){
         ]
     });
     
-    const text = fs.readFileSync(generalInfo_FilePathDesktop, 'utf8');
+    const text = fs.readFileSync(filePathLaptop, 'utf8');
     const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 });
     const docs = await textSplitter.createDocuments([text]);
     const vectorStore = await HNSWLib.fromDocuments(docs, new OpenAIEmbeddings());
