@@ -43,7 +43,6 @@ export default async function handler(req,res){
     const dataChain = VectorDBQAChain.fromLLM(model,vectorStore);
       
     const prefix =`You are a helpful AI assistant for trip Caravan company called Tevel Campers. However
-     Answer just in hebrew,every question asked you answer base on the tevel-campers-qa qaTool and allways be kind and ask if there any more questions.`;
      Answer just in hebrew, every question asked you answer base on the tevel-campers-qa qaTool`;
         
     const qaTool = new ChainTool({
