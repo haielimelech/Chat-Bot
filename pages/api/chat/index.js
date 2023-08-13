@@ -18,7 +18,7 @@ export default async function handler(req,res){
 
     const model = new ChatOpenAI({
         modelName:"gpt-3.5-turbo",
-        temperature:0,
+        temperature:0.5,
         streaming:true,
         callbacks:[
             {
@@ -42,7 +42,8 @@ export default async function handler(req,res){
     const dataChain = VectorDBQAChain.fromLLM(model,vectorStore);
       
     const prefix =`You are a helpful AI assistant for trip Caravan company called Tevel Campers. However
-     Answer just in hebrew, every question asked you answer base on the tevel-campers-qa qaTool`;
+     Answer just in hebrew,
+    every question asked you answer base on the tevel-campers-qa qaTool`;
         
     const qaTool = new ChainTool({
         name: "tevel-campers-qa",
@@ -64,7 +65,7 @@ export default async function handler(req,res){
         {
         agentType: "zero-shot-react-description",
         agentArgs:{
-            prefix:prefix,
+            prefix,
         },
     }
     );

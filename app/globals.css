@@ -8,12 +8,11 @@
   left: 0; /* Position at the left of the header */
   padding: 16px; /* Optional padding around the logo */
 }
-.copyright {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 8px;
+  
+  
+.copyright{
   color: rgb(114, 114, 114);
+  padding: 8px;
   font-size: 13px;
 }
 

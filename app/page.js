@@ -91,6 +91,7 @@ export default function Home() {
   }
  
   return (
+    <div className="flex flex-col min-h-screen">
     <main className="flex max-w-6xl mx-auto item-center justify-center p-24">
       <div className='logo'>
       <a href="https://tevel-campers.co.il/">
@@ -171,12 +172,14 @@ export default function Home() {
                 </div>
               )}
             </div>
-            <a href='https://www.linkedin.com/in/hai-elimelech-b18326213/'>
-        <p className='copyright'>© Hai Elimelech</p>
-        </a>
         </form>
       </div>
     </main>
-    
+    <footer>
+      <a href='https://www.linkedin.com/in/hai-elimelech-b18326213/' className="copyright">
+        © Hai Elimelech
+      </a>
+    </footer>
+  </div>
   );
 }
