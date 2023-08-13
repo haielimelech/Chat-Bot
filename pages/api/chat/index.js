@@ -19,6 +19,7 @@ export default async function handler(req,res){
     const model = new ChatOpenAI({
         modelName:"gpt-3.5-turbo",
         temperature:0.5,
+        temperature:0,
         streaming:true,
         callbacks:[
             {
@@ -43,6 +44,7 @@ export default async function handler(req,res){
       
     const prefix =`You are a helpful AI assistant for trip Caravan company called Tevel Campers. However
      Answer just in hebrew,every question asked you answer base on the tevel-campers-qa qaTool and allways be kind and ask if there any more questions.`;
+     Answer just in hebrew, every question asked you answer base on the tevel-campers-qa qaTool`;
         
     const qaTool = new ChainTool({
         name: "tevel-campers-qa",
