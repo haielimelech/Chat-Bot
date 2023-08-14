@@ -1,5 +1,4 @@
 import { ChatOpenAI } from "langchain/chat_models/openai";
-import { initializeAgentExecutorWithOptions,createVectorStoreRouterAgent} from "langchain/agents";
 import { SerpAPI, ChainTool } from "langchain/tools";
 import { VectorDBQAChain } from "langchain/chains";
 import { HNSWLib } from "langchain/vectorstores/hnswlib";
@@ -11,6 +10,7 @@ import { Input } from "postcss";
 import {Calculator} from "langchain/tools/calculator";
 import { RetrievalQAChain ,loadQAStuffChain  } from "langchain/chains";
 import { PromptTemplate } from "langchain/prompts";
+>>>>>>> parent of 126d345 (Update index.js)
 const path = require('path');
 
 export default async function handler(req,res){
