@@ -9,8 +9,7 @@ import { OpenAI } from "langchain/llms/openai";
 import * as fs from "fs";
 import { Input } from "postcss";
 import {Calculator} from "langchain/tools/calculator";
-import { Console } from "console";
-import { RetrievalQAChain } from "langchain/chains";
+import { RetrievalQAChain ,loadQAStuffChain  } from "langchain/chains";
 import { PromptTemplate } from "langchain/prompts";
 const path = require('path');
 
@@ -24,6 +23,7 @@ export default async function handler(req,res){
         modelName:"gpt-3.5-turbo",
         temperature:0.5,
         streaming:true,
+        verbose:true,
         callbacks:[
             {
                 handleLLMNewToken(token){
@@ -40,25 +40,25 @@ export default async function handler(req,res){
         ]
     });
     
-    const text = fs.readFileSync(filePathLaptop, 'utf8');
+    const text = fs.readFileSync(generalInfo_FilePathDesktop, 'utf8');
     const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 });
     const docs = await textSplitter.createDocuments([text]);
     const vectorStore = await HNSWLib.fromDocuments(docs, new OpenAIEmbeddings());
+
     const dataChain = VectorDBQAChain.fromLLM(model,vectorStore);
 
-    const template  = `You are a helpful AI assistant for trip Caravan company called Tevel Campers`; 
+    //const retriever = vectorStore.asRetriever();
 
-    const chain = RetrievalQAChain.fromLLM(model, vectorStore.asRetriever());
-    // const prefix =`You are a helpful AI assistant for trip Caravan company called Tevel Campers. However Answer just in hebrew and 
-    // every question asked you answer base on the tevel-campers-qa qaTool`;
-    
-    // const qaTool = new ChainTool({
-    //     name: "tevel-campers-qa",
-    //     description:`אתה שימושי כאשר שואלים אותך על השכרת קרוואנים,מחירים,יעדים ,הצעות מחיר,מידע כללי על הקרוואן,תכנון מסלולים,פרטים ויצירת קשר,
-    //     ..תמיד תשאל אם יש עוד שאלות ותהיה נחמד ואדיב ותענה רק בעברית`,
-    //     chain: chain,
-    //     returnDirect: true,
-    //   });
+    const prefix =`Use the following pieces of context to answer the users question. If you don't know the answer, just say that you don't know, don't try to make up an answer`;
+
+   // const chain = RetrievalQAChain.fromLLM(model,retriever,{descriptionTemplate});
+    const tool = new ChainTool({
+        name: "tevel-campers-information",
+        description:`אתה שימושי כאשר שואלים אותך על השכרת קרוואנים,מחירים,יעדים ,הצעות מחיר,מידע כללי על הקרוואן,תכנון מסלולים,פרטים ויצירת קשר,
+        ..תמיד תשאל אם יש עוד שאלות ותהיה נחמד ואדיב ותענה רק בעברית`,
+        chain:dataChain,
+        returnDirect:true,
+      });
     
     // const tools = [
     //     // new SerpAPI(process.env.SERPAPI_API_KEY,{hl: "en",gl: "us"}),
@@ -66,22 +66,22 @@ export default async function handler(req,res){
     //     qaTool,
     // ];
 
-    // const executer = await initializeAgentExecutorWithOptions(
-    //     [qaTool],
-    //     model,
-    //     {
-    //     agentType: "zero-shot-react-description",
-    //     agentArgs:{
-    //         prefix,
-    //     },
-    // }
-    // );
+    const executer = await initializeAgentExecutorWithOptions(
+        [tool],
+        model,
+        {
+        agentType: "openai-functions",
+        agentArgs:{
+            prefix
+        },
+    }
+    );
    
     console.log("Loaded the agent...");
 
-    // await executer.run(prompt);
+    await executer.run(prompt);
 
-    await chain.run(prompt);
+    //await chain.call({query:prompt});
 
     res.end();
 }
