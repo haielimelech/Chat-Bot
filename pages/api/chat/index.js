@@ -1,4 +1,5 @@
 import { ChatOpenAI } from "langchain/chat_models/openai";
+import { initializeAgentExecutorWithOptions} from "langchain/agents";
 import { SerpAPI, ChainTool } from "langchain/tools";
 import { VectorDBQAChain } from "langchain/chains";
 import { HNSWLib } from "langchain/vectorstores/hnswlib";
@@ -7,9 +8,11 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAI } from "langchain/llms/openai";
 import * as fs from "fs";
 import { Input } from "postcss";
+<<<<<<< HEAD
 import {Calculator} from "langchain/tools/calculator";
 import { RetrievalQAChain ,loadQAStuffChain  } from "langchain/chains";
 import { PromptTemplate } from "langchain/prompts";
+=======
 >>>>>>> parent of 126d345 (Update index.js)
 const path = require('path');
 
@@ -27,14 +30,13 @@ export default async function handler(req,res){
         callbacks:[
             {
                 handleLLMNewToken(token){
-                    res.write(token);
-                    // if (token === ' Input') {
-                    //     shouldStartWriting = true;
-                    //     token = 'תשובה עבור';               
-                    // }
-                    // if (shouldStartWriting) {
-                    //     res.write(token);
-                    // }
+                    if (token === ' Input') {
+                        shouldStartWriting = true;
+                        token = 'תשובה עבור';               
+                    }
+                    if (shouldStartWriting) {
+                        res.write(token);
+                    } 
                 }
             },
         ]
@@ -47,6 +49,7 @@ export default async function handler(req,res){
 
     const dataChain = VectorDBQAChain.fromLLM(model,vectorStore);
 
+<<<<<<< HEAD
     //const retriever = vectorStore.asRetriever();
 
     const prefix =`Use the following pieces of context to answer the users question. If you don't know the answer, just say that you don't know, don't try to make up an answer`;
@@ -80,8 +83,11 @@ export default async function handler(req,res){
     console.log("Loaded the agent...");
 
     await executer.run(prompt);
+<<<<<<< HEAD
 
     //await chain.call({query:prompt});
+=======
+>>>>>>> parent of 126d345 (Update index.js)
 
     res.end();
 }
