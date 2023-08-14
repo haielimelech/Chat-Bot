@@ -17,7 +17,7 @@ export default async function handler(req,res){
     const {prompt} = req.body;
     const filePathLaptop = path.join('C:', 'Users','Public', 'tevel-campers.txt');
     const generalInfo_FilePathDesktop = path.join('C:', 'Users', 'hai84', 'Desktop', "Projects", 'tevel-campers.txt');
-    let shouldStartWriting = false;
+    //let shouldStartWriting = false;
 
     const model = new ChatOpenAI({
         modelName:"gpt-3.5-turbo",
@@ -33,7 +33,7 @@ export default async function handler(req,res){
     });
     
     const text = fs.readFileSync(generalInfo_FilePathDesktop, 'utf8');
-    const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 });
+    const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 100,chunkOverlap:0});
     const docs = await textSplitter.createDocuments([text]);
     const vectorStore = await HNSWLib.fromDocuments(docs, new OpenAIEmbeddings());
     const dataChain = VectorDBQAChain.fromLLM(model,vectorStore);
@@ -47,12 +47,11 @@ export default async function handler(req,res){
 
     const chain = RetrievalQAChain.fromLLM(model,retriever,{
         agentType:"zero-shot-react-description",
-        verbose:true,
         agentArgs:{
             prefix
         }
     });
-        
+    
     // const qaTool = new ChainTool({
     //     name: "tevel-campers-qa",
     //     description:`שאתה שימושי כאשר שואלים אותך על השכרת קרוואנים,מחירים,יעדים ,הצעות מחיר,מידע כללי על הקרוואן,תכנון מסלולים,פרטים ודרכי התקשרות,Always answer in hebrew, Ask if there any more question every time you finish answering a question`,
