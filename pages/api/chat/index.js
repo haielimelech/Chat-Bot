@@ -48,6 +48,24 @@ export default async function handler(req,res){
     const vectorStore = await HNSWLib.fromDocuments(docs, new OpenAIEmbeddings());
 
     const dataChain = VectorDBQAChain.fromLLM(model,vectorStore);
+      
+    const prefix =`You are a helpful AI assistant for trip Caravan company called Tevel Campers. However
+     Answer just in hebrew,
+    every question asked you answer base on the tevel-campers-qa qaTool`;
+        
+    const qaTool = new ChainTool({
+        name: "tevel-campers-qa",
+        description:
+          `אתה שימושי כאשר שואלים אותך על השכרת קרוואנים,מחירים,יעדים ,הצעות מחיר,מידע כללי על הקרוואן,תכנון מסלולים,פרטים ודרכי התקשרות,
+        ..תמיד תשאל אם יש עוד שאלות ותהיה נחמד ואדיב ותענה רק בעברית`,
+        chain: dataChain,
+        returnDirect: true,
+      });
+      
+    const tools = [
+        // new SerpAPI(process.env.SERPAPI_API_KEY,{hl: "en",gl: "us"}),
+        qaTool,
+    ];
 
 <<<<<<< HEAD
     //const retriever = vectorStore.asRetriever();
@@ -76,6 +94,15 @@ export default async function handler(req,res){
         agentType: "openai-functions",
         agentArgs:{
             prefix
+=======
+    const executer = await initializeAgentExecutorWithOptions(
+        [qaTool],
+        model,
+        {
+        agentType: "zero-shot-react-description",
+        agentArgs:{
+            prefix,
+>>>>>>> parent of 126d345 (Update index.js)
         },
     }
     );
