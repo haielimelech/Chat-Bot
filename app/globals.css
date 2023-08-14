@@ -11,6 +11,10 @@
   
   
 .copyright{
+   /* buttom left */
+  position: absolute;
+  bottom: 0;
+  left: 0; 
   color: rgb(114, 114, 114);
   padding: 8px;
   font-size: 13px;

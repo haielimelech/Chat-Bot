@@ -175,11 +175,11 @@ export default function Home() {
         </form>
       </div>
     </main>
-    <footer>
+    
       <a href='https://www.linkedin.com/in/hai-elimelech-b18326213/' className="copyright">
         © Hai Elimelech
       </a>
-    </footer>
+    
   </div>
   );
 }
