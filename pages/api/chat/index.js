@@ -10,11 +10,12 @@ import * as fs from "fs";
 import { Input } from "postcss";
 import {Calculator} from "langchain/tools/calculator";
 import { RetrievalQAChain ,loadQAStuffChain  } from "langchain/chains";
-import { PromptTemplate } from "langchain/prompts";
+
 const path = require('path');
 
 export default async function handler(req,res){
     const {prompt} = req.body;
+
     const filePathLaptop = path.join('C:', 'Users','Public', 'tevel-campers.txt');
     const generalInfo_FilePathDesktop = path.join('C:', 'Users', 'hai84', 'Desktop', "Projects", 'tevel-campers.txt');
     //let shouldStartWriting = false;
@@ -33,7 +34,7 @@ export default async function handler(req,res){
     });
     
     const text = fs.readFileSync(generalInfo_FilePathDesktop, 'utf8');
-    const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 100,chunkOverlap:0});
+    const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000,chunkOverlap:200});
     const docs = await textSplitter.createDocuments([text]);
     const vectorStore = await HNSWLib.fromDocuments(docs, new OpenAIEmbeddings());
     //const dataChain = VectorDBQAChain.fromLLM(model,vectorStore);
@@ -43,16 +44,21 @@ export default async function handler(req,res){
 
     const retriever = vectorStore.asRetriever();
 
-    // console.log("Loaded the agent...");
-
     const chain = RetrievalQAChain.fromLLM(model,retriever,{
         agentType:"zero-shot-react-description",
         agentArgs:{
             prefix
         }
     });
-    
-    // const qaTool = new ChainTool({
+
+    console.log("Loaded the Chain...");
+
+    await chain.run(prompt);
+
+    res.end();
+}
+
+// const qaTool = new ChainTool({
     //     name: "tevel-campers-qa",
     //     description:`שאתה שימושי כאשר שואלים אותך על השכרת קרוואנים,מחירים,יעדים ,הצעות מחיר,מידע כללי על הקרוואן,תכנון מסלולים,פרטים ודרכי התקשרות,Always answer in hebrew, Ask if there any more question every time you finish answering a question`,
     //     chain: dataChain,
@@ -75,8 +81,3 @@ export default async function handler(req,res){
     // console.log("Loaded the agent...");
 
     // await executer.run(prompt);
-
-    await chain.run(prompt);
-
-    res.end();
-}

@@ -4,9 +4,9 @@
 
 .logo {
   position: absolute; /* Position the logo absolutely within the header */
-  top: 0; /* Position at the top of the header */
-  left: 0; /* Position at the left of the header */
-  padding: 16px; /* Optional padding around the logo */
+  top: 0px; /* Position at the top of the header */
+  left: 0px; /* Position at the left of the header */
+  padding: 15px; /* Optional padding around the logo */
 }
   
   
@@ -22,8 +22,7 @@
 
 /* Optional styling for the logo image */
 .logo img {
-  max-height: 70px; /* Set a maximum height for the logo */
-   
+  max-height: 65px; /* Set a maximum height for the logo */
 }
 
 /* Define a custom color class */
@@ -34,4 +33,9 @@
 /* Apply the custom color class to the body element */
 body {
   @apply bg-custom-orange;
+  background-image: url('https://i.ibb.co/p1ptLhD/IMG-5922.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 0px 250px;
+  background-attachment: fixed;
 }
