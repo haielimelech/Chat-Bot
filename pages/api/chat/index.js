@@ -36,7 +36,7 @@ export default async function handler(req,res){
     const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 100,chunkOverlap:0});
     const docs = await textSplitter.createDocuments([text]);
     const vectorStore = await HNSWLib.fromDocuments(docs, new OpenAIEmbeddings());
-    const dataChain = VectorDBQAChain.fromLLM(model,vectorStore);
+    //const dataChain = VectorDBQAChain.fromLLM(model,vectorStore);
 
     const prefix =`You are a helpful AI assistant for trip Caravan company called Tevel Campers. However
     Answer just in hebrew, and always ask if there any more question every time you finish answering a question`;
