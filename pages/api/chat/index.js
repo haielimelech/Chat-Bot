@@ -22,7 +22,7 @@ export default async function handler(req,res){
 
     const model = new ChatOpenAI({
         modelName:"gpt-3.5-turbo",
-        temperature:0.5,
+        temperature:0.3,
         streaming:true,
         callbacks:[
             {
