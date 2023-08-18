@@ -175,10 +175,6 @@ export default function Home() {
         </form>
       </div>
     </main>
-      {/* <a href='https://www.linkedin.com/in/hai-elimelech-b18326213/' className="copyright">
-        © Hai Elimelech
-      </a> */}
-    
   </div>
   );
 }
